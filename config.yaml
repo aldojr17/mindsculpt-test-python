@@ -1,0 +1,4 @@
+mindsculpt:
+  api:
+    host: localhost:8080
+    protocol: http
