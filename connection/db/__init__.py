@@ -1,19 +1,19 @@
 import psycopg2
 
-from config.config import Config
+import config
 from connection.db.utils import convert_records
 
-config = Config()
+cfg = config.get_config()
 
 
-class DbExecutor(object):
+class DbExecutor:
 
     def __init__(self) -> None:
-        self.host = config.db_host
-        self.port = config.db_port
-        self.username = config.db_username
-        self.password = config.db_password
-        self.schema = config.db_name
+        self.host = cfg.db_host
+        self.port = cfg.db_port
+        self.username = cfg.db_username
+        self.password = cfg.db_password
+        self.schema = cfg.db_name
         self._pool = None
 
     @property

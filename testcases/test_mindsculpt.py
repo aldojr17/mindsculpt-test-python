@@ -1,3 +1,4 @@
+from connection.redis.redis import RedisUtils
 from connection.request_client.request_client import RequestClient
 from testcases.base import MindsculptBase
 from http import HTTPStatus
@@ -9,3 +10,5 @@ class TestMindsculpt(MindsculptBase):
         response = RequestClient().get(path=self.PATH_GET_MODELS)
         assert response.status_code == HTTPStatus.OK
 
+        record = RedisUtils.get_models_key()
+        assert record is not None
