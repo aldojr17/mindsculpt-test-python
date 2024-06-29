@@ -1,4 +1,10 @@
 mindsculpt:
   api:
-    host: localhost:8080
-    protocol: http
+    host:
+    protocol:
+  db:
+    host:
+    port:
+    username:
+    password:
+    db_name:
