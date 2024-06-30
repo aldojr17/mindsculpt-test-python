@@ -1,20 +1,21 @@
+import requests
+
+import config
 import utils
 from connection.constant import HttpMethod
 
-from config.config import Config
-import requests
-
-
+cfg = config.get_config()
 logger = utils.get_logger()
 
 
 class RequestClient:
 
     def __init__(self) -> None:
-        self.config = Config()
+        self.host = cfg.host
+        self.protocol = cfg.protocol
 
     def get(self, path, params=None):
-        url = f"{self.config.protocol}://{self.config.host}{path}"
+        url = f"{self.protocol}://{self.host}{path}"
 
         logger.info(
             f"method={HttpMethod.GET}|url={url}|params={params}"
@@ -27,4 +28,3 @@ class RequestClient:
         )
 
         return response
-
