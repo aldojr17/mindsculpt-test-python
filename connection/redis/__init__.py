@@ -21,7 +21,8 @@ class RedisClient:
             self._client = redispy.Redis(
                 host=self.host,
                 port=self.port,
-                password=self.password
+                password=self.password,
+                decode_responses=True
             )
 
         return self._client
