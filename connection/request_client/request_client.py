@@ -28,3 +28,18 @@ class RequestClient:
         )
 
         return response
+
+    def post(self, path, body):
+        url = f"{self.protocol}://{self.host}{path}"
+
+        logger.info(
+            f"method={HttpMethod.GET}|url={url}|body={body}"
+        )
+
+        response = requests.post(url=url, json=body)
+
+        logger.info(
+            f"status_code={response.status_code}|body={response.text}"
+        )
+
+        return response
