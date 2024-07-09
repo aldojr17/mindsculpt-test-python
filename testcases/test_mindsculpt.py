@@ -3,6 +3,7 @@ from http import HTTPStatus
 from jsonschema import validate
 
 import connection
+from connection.db.db import DBUtils
 from connection.redis.redis import RedisUtils
 from testcases.base import MindsculptBase
 from testcases.schema import MindsculptSchema
@@ -31,3 +32,12 @@ class TestMindsculpt(MindsculptBase):
         result = response.json()
 
         validate(instance=result, schema=MindsculptSchema.GENERATION_SCHEMA)
+
+        data = result.get("data")
+
+        record = DBUtils.get_image_generation_by_id(data.get("uuid", ""))
+        assert record is not None
+
+        assert record.get("id") == data.get("uuid")
+        assert record.get("url") == data.get("image_url")
+        assert record.get("censored") == data.get("censored")
