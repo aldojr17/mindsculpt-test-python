@@ -1,3 +1,12 @@
+import random
+
+import config
+import utils
+
+query_data = config.get_query_data()
+logger = utils.get_logger()
+
+
 class MindsculptBase:
     PATH_GET_MODELS = "/models"
     PATH_GENERATE = "/generate"
@@ -35,9 +44,15 @@ class MindsculptBase:
                 "height": 720
             }
 
-    def generate_body(self, query, ratio=RATIO_1_1):
+    @staticmethod
+    def generate_query():
+        sentence = random.choice(query_data.sentences.get("data")).get("sentence", "football player")
+        logger.info(f"query: {sentence}")
+        return sentence
+
+    def generate_body(self, ratio=RATIO_1_1):
         body = {
-            "query": query,
+            "query": self.generate_query(),
             "negative_prompt_unclip": "bright colors",
             "model_id": 4
         }

@@ -25,7 +25,7 @@ class TestMindsculpt(MindsculptBase):
         assert record == result.get("data", {})
 
     def test_generate_image(self):
-        body = self.generate_body("football player")
+        body = self.generate_body()
         response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
         assert response.status_code == HTTPStatus.CREATED
 
