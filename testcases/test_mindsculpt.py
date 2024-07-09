@@ -27,3 +27,7 @@ class TestMindsculpt(MindsculptBase):
         body = self.generate_body("football player")
         response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
         assert response.status_code == HTTPStatus.CREATED
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.GENERATION_SCHEMA)
