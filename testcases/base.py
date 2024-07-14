@@ -50,9 +50,9 @@ class MindsculptBase:
         logger.info(f"query: {sentence}")
         return sentence
 
-    def generate_body(self, ratio=RATIO_1_1):
+    def generate_body(self, query=None, ratio=RATIO_1_1):
         body = {
-            "query": self.generate_query(),
+            "query": self.generate_query() if not query else query,
             "negative_prompt_unclip": "bright colors",
             "model_id": 4
         }

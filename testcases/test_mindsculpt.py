@@ -90,6 +90,24 @@ class TestMindsculpt(MindsculptBase):
         assert record.get("url") == data.get("image_url")
         assert record.get("censored") == data.get("censored")
 
+    def test_generate_image_with_non_english_words(self):
+        body = self.generate_body("冰茶")
+        response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
+        assert response.status_code == HTTPStatus.CREATED
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.GENERATION_SCHEMA)
+
+        data = result.get("data")
+
+        record = DBUtils.get_image_generation_by_id(data.get("uuid", ""))
+        assert record is not None
+
+        assert record.get("id") == data.get("uuid")
+        assert record.get("url") == data.get("image_url")
+        assert record.get("censored") == data.get("censored")
+
     def test_generate_image_with_null_value_for_optional_field(self):
         body = self.generate_body()
         body = {key: value if key == "query" else None for key, value in body.items()}
