@@ -128,6 +128,17 @@ class TestMindsculpt(MindsculptBase):
         assert record.get("url") == data.get("image_url")
         assert record.get("censored") == data.get("censored")
 
+    def test_generate_image_without_required_field(self):
+        body = self.generate_body()
+        del body["query"]
+
+        response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.BAD_REQUEST_SCHEMA)
+
     def test_generate_image_with_more_than_maximum_query_length(self):
         body = self.generate_body("a"*1001)
         response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
@@ -137,10 +148,10 @@ class TestMindsculpt(MindsculptBase):
 
         validate(instance=result, schema=MindsculptSchema.BAD_REQUEST_SCHEMA)
 
-    def test_generate_image_without_required_field(self):
+    def test_generate_image_with_floating_ratio(self):
         body = self.generate_body()
-        del body["query"]
-
+        body["width"] = 1280.0
+        body["height"] = 1280.0
         response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
         assert response.status_code == HTTPStatus.BAD_REQUEST
 
