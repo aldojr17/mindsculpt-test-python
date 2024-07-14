@@ -60,3 +60,19 @@ class MindsculptSchema:
         },
         "required": ["data", "is_success", "message"],
     }
+
+    BAD_REQUEST_SCHEMA = {
+        "type": "object",
+        "properties": {
+            "error": {
+                "type": "null"
+            },
+            "is_success": {
+                "type": "boolean"
+            },
+            "message": {
+                "type": "string"
+            },
+        },
+        "required": ["error", "is_success", "message"],
+    }

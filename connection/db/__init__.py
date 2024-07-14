@@ -18,7 +18,7 @@ class DbExecutor:
 
     @property
     def pool(self):
-        if not self._pool:
+        if not self._pool or self._pool.closed != 0:
             self._pool = psycopg2.connect(
                 database=self.schema,
                 host=self.host,

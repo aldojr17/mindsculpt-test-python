@@ -25,8 +25,8 @@ class MindsculptBase:
             }
         elif ratio == self.RATIO_2_3:
             return {
-                "width": 1280,
-                "height": 1920
+                "width": 853,
+                "height": 1280
             }
         elif ratio == self.RATIO_3_2:
             return {
@@ -35,8 +35,8 @@ class MindsculptBase:
             }
         elif ratio == self.RATIO_9_16:
             return {
-                "width": 1280,
-                "height": 2276
+                "width": 720,
+                "height": 1280
             }
         elif ratio == self.RATIO_16_9:
             return {

@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+from parameterized import parameterized
 from jsonschema import validate
 
 import connection
@@ -41,3 +42,60 @@ class TestMindsculpt(MindsculptBase):
         assert record.get("id") == data.get("uuid")
         assert record.get("url") == data.get("image_url")
         assert record.get("censored") == data.get("censored")
+
+    @parameterized.expand(
+        [
+            MindsculptBase.RATIO_1_1,
+            MindsculptBase.RATIO_2_3,
+            MindsculptBase.RATIO_3_2,
+            MindsculptBase.RATIO_9_16,
+            MindsculptBase.RATIO_16_9,
+        ]
+    )
+    def test_generate_image_with_different_ratio(self, ratio):
+        body = self.generate_body(ratio)
+        response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
+        assert response.status_code == HTTPStatus.CREATED
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.GENERATION_SCHEMA)
+
+        data = result.get("data")
+
+        record = DBUtils.get_image_generation_by_id(data.get("uuid", ""))
+        assert record is not None
+
+        assert record.get("id") == data.get("uuid")
+        assert record.get("url") == data.get("image_url")
+        assert record.get("censored") == data.get("censored")
+
+    def test_generate_image_without_required_field(self):
+        body = self.generate_body()
+        del body["query"]
+
+        response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.BAD_REQUEST_SCHEMA)
+
+    @parameterized.expand(
+        [
+            ("width", "1280"),
+            ("height", "1280"),
+            ("model_id", "4"),
+            ("query", 1280),
+            ("negative_prompt_unclip", 1280),
+        ])
+    def test_generate_image_with_invalid_data_types(self, field, value):
+        body = self.generate_body()
+        body[field] = value
+
+        response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.BAD_REQUEST_SCHEMA)
