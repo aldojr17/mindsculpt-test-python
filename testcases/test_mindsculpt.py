@@ -139,6 +139,16 @@ class TestMindsculpt(MindsculptBase):
 
         validate(instance=result, schema=MindsculptSchema.BAD_REQUEST_SCHEMA)
 
+    def test_generate_image_with_empty_body(self):
+        body = {}
+
+        response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.BAD_REQUEST_SCHEMA)
+
     def test_generate_image_with_more_than_maximum_query_length(self):
         body = self.generate_body("a"*1001)
         response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
