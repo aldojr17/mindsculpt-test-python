@@ -23,9 +23,7 @@ class RequestClient:
 
         response = requests.get(url=url, params=params)
 
-        logger.info(
-            f"status_code={response.status_code}|body={response.text}"
-        )
+        self.log_response(response)
 
         return response
 
@@ -33,13 +31,17 @@ class RequestClient:
         url = f"{self.protocol}://{self.host}{path}"
 
         logger.info(
-            f"method={HttpMethod.GET}|url={url}|body={body}"
+            f"method={HttpMethod.POST}|url={url}|body={body}"
         )
 
         response = requests.post(url=url, json=body)
 
-        logger.info(
-            f"status_code={response.status_code}|body={response.text}"
-        )
+        self.log_response(response)
 
         return response
+
+    @staticmethod
+    def log_response(response):
+        logger.info(
+            f"status_code={response.status_code}|response={response.text}"
+        )
