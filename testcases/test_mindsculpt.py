@@ -169,6 +169,28 @@ class TestMindsculpt(MindsculptBase):
 
         validate(instance=result, schema=MindsculptSchema.BAD_REQUEST_SCHEMA)
 
+    def test_generate_image_with_negative_width(self):
+        body = self.generate_body()
+        body["width"] = -1280
+        body["height"] = 1280
+        response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.BAD_REQUEST_SCHEMA)
+
+    def test_generate_image_with_negative_height(self):
+        body = self.generate_body()
+        body["width"] = 1280
+        body["height"] = -1280
+        response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.BAD_REQUEST_SCHEMA)
+
     def test_generate_image_with_zero_dimension(self):
         body = self.generate_body()
         body["width"] = 0
