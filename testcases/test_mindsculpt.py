@@ -189,6 +189,25 @@ class TestMindsculpt(MindsculptBase):
         assert record.get("url") == data.get("image_url")
         assert record.get("censored") == data.get("censored")
 
+    def test_generate_image_with_zero_model_id(self):
+        body = self.generate_body()
+        body["model_id"] = 0
+        response = connection.get_request_client().post(path=self.PATH_GENERATE, body=body)
+        assert response.status_code == HTTPStatus.CREATED
+
+        result = response.json()
+
+        validate(instance=result, schema=MindsculptSchema.GENERATION_SCHEMA)
+
+        data = result.get("data")
+
+        record = DBUtils.get_image_generation_by_id(data.get("uuid", ""))
+        assert record is not None
+
+        assert record.get("id") == data.get("uuid")
+        assert record.get("url") == data.get("image_url")
+        assert record.get("censored") == data.get("censored")
+
     @parameterized.expand(
         [
             ("width", "1280"),
